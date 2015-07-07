@@ -5,12 +5,13 @@ local workspaceFile
 ###############################
 ## Clean and close current workspace
 set startupMessage to ""
-tell application "Xcode"
-	set currentWorkspace to active workspace document
-	if (application "Xcode" is running) and (currentWorkspace is not equal to missing value) then
-		set cleanXcode to true
-		set workspaceFile to file of currentWorkspace
-		set startupMessage to "This will
+if (application "Xcode" is running) then
+	tell application "Xcode"
+		set currentWorkspace to active workspace document
+		if (currentWorkspace is not equal to missing value) then
+			set cleanXcode to true
+			set workspaceFile to file of currentWorkspace
+			set startupMessage to "This will
 1. Clean the active Xcode workspace
 2. Quit Xcode
 3. Permanently delete the contents of the Derived Data folder
@@ -18,8 +19,12 @@ tell application "Xcode"
 5. If all of the above worked correctly, reopen the currently active Xcode workspace.
 
 Proceed with the active Xcode workspace as " & name of currentWorkspace & "?"
-	else
-		set startupMessage to "This will
+		end if
+	end tell
+end if
+
+if startupMessage is equal to "" then
+	set startupMessage to "This will
 1. *Clean the active Xcode workspace
 2. *Quit Xcode
 3. Permanently delete the contents of the Derived Data folder
@@ -29,8 +34,7 @@ Proceed with the active Xcode workspace as " & name of currentWorkspace & "?"
 * Since you don't have an open Xcode workspace, the Xcode-specific steps cannot be performed. Running this script now may be sufficient but if you have issues, you may want to run this again with your workspace open.
 
 Proceed without cleaning your Xcode workspace?"
-	end if
-end tell
+end if
 
 display dialog startupMessage buttons {"Cancel", "Continue"} default button 2
 
@@ -47,12 +51,12 @@ This step is necessary because there's currently a bug with Xcode where it tells
 	end tell
 end if
 
+###############################
+## Permanently delete Derived Data folder
 tell application "Xcode"
 	quit
 end tell
 
-###############################
-## Permanently delete Derived Data folder
 do shell script "
 #Save the starting dir
 startingDir=$PWD
@@ -79,6 +83,12 @@ if result is not "Done" then error result
 
 ###############################
 ## Reset simulators
+if (application "iOS Simulator" is running) then
+	tell application "iOS Simulator"
+		quit
+	end tell
+end if
+
 set devices to do shell script "xcrun simctl list"
 set the text item delimiters to return
 set uuids to ""
