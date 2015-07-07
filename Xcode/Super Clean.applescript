@@ -1,12 +1,15 @@
-set startupMessage to ""
 set cleanXcode to false
-set gCurrentWorkspace to false
+local currentWorkspace
+local workspaceFile
 
 ###############################
 ## Clean and close current workspace
+set startupMessage to ""
 tell application "Xcode"
-	if (application "Xcode" is running) and ((active workspace document) is not equal to missing value) then
+	set currentWorkspace to active workspace document
+	if (application "Xcode" is running) and (currentWorkspace is not equal to missing value) then
 		set cleanXcode to true
+		set workspaceFile to file of currentWorkspace
 		set startupMessage to "This will
 1. Clean the active Xcode workspace
 2. Quit Xcode
@@ -14,7 +17,7 @@ tell application "Xcode"
 4. Reset all installed iOS simulators
 5. If all of the above worked correctly, reopen the currently active Xcode workspace.
 
-Proceed with the active Xcode workspace as " & name of active workspace document & "?"
+Proceed with the active Xcode workspace as " & name of currentWorkspace & "?"
 	else
 		set startupMessage to "This will
 1. *Clean the active Xcode workspace
@@ -33,16 +36,14 @@ display dialog startupMessage buttons {"Cancel", "Continue"} default button 2
 
 if cleanXcode then
 	tell application "Xcode"
-		
-		set gCurrentWorkspace to active workspace document
-		tell gCurrentWorkspace
+		tell currentWorkspace
 			clean
 		end tell
 		
 		display dialog "Please check the top status view and click Continue when it says
-\"Cleaning {project name}: Succeeded\".
+\"Clean {project name}: Succeeded\".
 
-This step is necessary because there's currently a bug with Xcode where it tells the system that cleaning has finished when it really hasn't. #thanksApple" buttons {"Cancel", "Continue"}
+This step is necessary because there's currently a bug with Xcode where it tells the system that cleaning has finished when it really hasn't. #thanksApple" buttons {"Cancel", "Continue"} default button "Continue"
 	end tell
 end if
 
@@ -83,6 +84,7 @@ set the text item delimiters to return
 set uuids to ""
 
 repeat with nextLine in (text items of devices)
+	exit repeat
 	try
 		set openPar to offset of "(" in nextLine
 		if openPar is 0 then error "No open parenthesis" number 987
@@ -122,5 +124,9 @@ Continue?"
 	end try
 end repeat
 
-if gCurrentWorkspace is not false then open gCurrentWorkspace
+if cleanXcode then
+	tell application "Finder"
+		open workspaceFile
+	end tell
+end if
 return "Done"
