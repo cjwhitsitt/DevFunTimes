@@ -58,9 +58,6 @@ tell application "Xcode"
 end tell
 
 do shell script "
-#Save the starting dir
-startingDir=$PWD
-
 #Go to the derivedData
 cd ~/Library/Developer/Xcode/DerivedData
 
@@ -75,9 +72,6 @@ while [ $numRemainingFiles -gt 0 ]; do
 done
 
 echo Done
-
-#Go back to starting dir
-cd $startingDir
 "
 if result is not "Done" then error result
 
@@ -94,7 +88,6 @@ set the text item delimiters to return
 set uuids to ""
 
 repeat with nextLine in (text items of devices)
-	exit repeat
 	try
 		set openPar to offset of "(" in nextLine
 		if openPar is 0 then error "No open parenthesis" number 987
@@ -134,6 +127,7 @@ Continue?"
 	end try
 end repeat
 
+# Reopen Xcode if necessary
 if cleanXcode then
 	tell application "Finder"
 		open workspaceFile
