@@ -24,3 +24,5 @@ Many people seem to base the number off of number of commits in the master branc
 - Crash logs that include the build number will correspond to a specific commit (or rather code between two commits in the case of uncommitted changes).
 
 This script should be added to a build phase anytime after the Copy Bundle Resources phase. To be safe, I usually make this the last phase.
+
+**Note**: To avoid distributing builds that are one number lower than what you expect, be sure to commit any changes prior to distributing a build.
