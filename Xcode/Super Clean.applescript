@@ -86,9 +86,23 @@ end if
 set devices to do shell script "xcrun simctl list"
 set the text item delimiters to return
 set uuids to ""
+set inDevices to false
 
 repeat with nextLine in (text items of devices)
 	try
+		#log nextLine
+		if not ((offset of "==" in nextLine) is 0) then # if starting a section
+			if ((offset of "== Devices ==" in nextLine) is 0) then # and the section is Devices
+				set inDevices to false
+			else # and the section is not Devices
+				set inDevices to true
+			end if
+		end if
+		
+		if not inDevices then
+			error "Not in devices" number 987
+		end if
+		
 		set openPar to offset of "(" in nextLine
 		if openPar is 0 then error "No open parenthesis" number 987
 		
@@ -96,12 +110,6 @@ repeat with nextLine in (text items of devices)
 		if closePar is 0 then error "No close parenthesis" number 987
 		
 		set substring to text (openPar + 1) thru (closePar - 1) of nextLine
-		if substring starts with "com." then
-			error "Expected uuid is actually a bundle id" number 987
-		else
-			set periodOffset to (offset of "." in substring)
-			if periodOffset is equal to 2 then error "Expected uuid is actually an iOS version" number 987
-		end if
 		
 		set command to "xcrun simctl erase " & substring
 		do shell script command
@@ -115,8 +123,8 @@ Continue?"
 			if button returned is "End Now" then error msg
 		else
 			#uncomment for debugging
-			#set uuids to uuids & command & "
-			#"
+			set uuids to uuids & command & "
+			"
 		end if
 	on error msg number n from f to t partial result p
 		if n is equal to 987 then
