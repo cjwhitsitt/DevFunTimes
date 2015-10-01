@@ -26,3 +26,8 @@ Many people seem to base the number off of number of commits in the master branc
 This script should be added to a build phase anytime after the Copy Bundle Resources phase. To be safe, I usually make this the last phase.
 
 **Note**: To avoid distributing builds that are one number lower than what you expect, be sure to commit any changes prior to distributing a build.
+
+#### [Open Xcode Workspace](https://github.com/cjwhitsitt/scripts/blob/master/Xcode/xcw-open)
+Put this script in a folder that's in your Unix PATH, then run `xcw-open` from the command line to open an Xcode workspace while your pwd is the project folder.  This is useful when you have to close the Xcode workspace, run something on the command line (maybe `pod install`), then reopen Xcode.
+
+Note: This only opens the .xcworkspace file in the current directory. You can easily edit this to check the ls output and open the .xcproject file it no .xcworkspace file exists.
