@@ -1,0 +1,1 @@
+open `ls | grep .xcworkspace`
