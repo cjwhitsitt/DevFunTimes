@@ -81,6 +81,10 @@ if (application "iOS Simulator" is running) then
 	tell application "iOS Simulator"
 		quit
 	end tell
+else if (application "Simulator" is running) then
+	tell application "Simulator"
+		quit
+	end tell
 end if
 
 set devices to do shell script "xcrun simctl list"
