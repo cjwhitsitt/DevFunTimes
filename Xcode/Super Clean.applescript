@@ -47,7 +47,7 @@ if cleanXcode then
 		display dialog "Please check the top status view and click Continue when it says
 \"Clean {project name}: Succeeded\".
 
-This step is necessary because there's currently a bug with Xcode where it tells the system that cleaning has finished when it really hasn't. #thanksApple" buttons {"Cancel", "Continue"} default button "Continue"
+This step is necessary because there's currently a bug with Xcode where it tells the system that cleaning has finished when it really hasn't." buttons {"Cancel", "Continue"} default button "Continue"
 	end tell
 end if
 
