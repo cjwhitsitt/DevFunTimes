@@ -1,0 +1,46 @@
+# Set IP to ping
+
+trap my_exit EXIT
+
+if [ -z "$1" ]
+then
+  YOUR_ISP="8.8.8.8"
+else
+  YOUR_ISP=$1
+fi
+
+NUM_FAILED=0
+NUM_TOTAL=0
+
+failed() {
+  NUM_FAILED=$((NUM_FAILED+1))
+  say $NUM_FAILED failed
+  percent_failed
+  say $? percent
+}
+
+percent_failed() {
+  if [ $NUM_TOTAL == 0 ] 
+  then
+    return 100
+  else
+    return $((NUM_FAILED*100/NUM_TOTAL))
+  fi
+}
+
+ping_loop() {
+  while :
+  do
+    NUM_TOTAL=$((NUM_TOTAL+1))
+    ping -t 2 -o -c 1 $YOUR_ISP || failed
+    sleep 1
+  done
+}
+
+my_exit() {
+  #When ended, show details
+  percent_failed
+  echo "\n\nSent: $NUM_TOTAL\nFailed: $NUM_FAILED\nPacket loss: $?%"
+}
+
+ping_loop
