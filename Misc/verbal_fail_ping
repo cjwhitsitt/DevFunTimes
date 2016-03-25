@@ -31,8 +31,10 @@ percent_failed() {
 ping_loop() {
   while :
   do
+    now="$(date)"
+    echo "$now"
     NUM_TOTAL=$((NUM_TOTAL+1))
-    ping -t 2 -o -c 1 $YOUR_ISP || failed
+    ping -t 2 -o -c 1 $YOUR_ISP | grep "ttl=" || failed
     sleep 1
   done
 }
