@@ -150,5 +150,7 @@ if cleanXcode and reopenOption is equal to reopenXcodeOption then
 	tell application "Finder"
 		open workspaceFile
 	end tell
+	else
+	display dialog "Done!"
 end if
 return "Done"
