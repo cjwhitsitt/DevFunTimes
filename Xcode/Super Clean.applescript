@@ -2,6 +2,8 @@ set cleanXcode to false
 local currentWorkspace
 local workspaceFile
 
+set reopenXcodeOption to "Reopen Xcode"
+
 ###############################
 ## Clean and close current workspace
 set startupMessage to ""
@@ -16,7 +18,7 @@ if (application "Xcode" is running) then
 2. Quit Xcode
 3. Permanently delete the contents of the Derived Data folder
 4. Reset all installed iOS simulators
-5. If all of the above worked correctly, reopen the currently active Xcode workspace.
+5. If you clicked the \"" & reopenXcodeOption & "\" button and all of the above worked correctly, reopen the currently active Xcode workspace.
 
 Proceed with the active Xcode workspace as " & name of currentWorkspace & "?"
 		end if
@@ -29,14 +31,15 @@ if startupMessage is equal to "" then
 2. *Quit Xcode
 3. Permanently delete the contents of the Derived Data folder
 4. Reset all installed iOS simulators
-5. *If all of the above worked correctly, reopen the currently active Xcode workspace.
+5. *If you clicked the \"" & reopenXcodeOption & "\" button and all of the above worked correctly, reopen the currently active Xcode workspace.
 
 * Since you don't have an open Xcode workspace, the Xcode-specific steps cannot be performed. Running this script now may be sufficient but if you have issues, you may want to run this again with your workspace open.
 
 Proceed without cleaning your Xcode workspace?"
 end if
 
-display dialog startupMessage buttons {"Cancel", "Continue"} default button 2
+display dialog startupMessage buttons {"Cancel", "Don't Reopen Xcode", reopenXcodeOption} default button 3
+set reopenOption to button returned of result
 
 if cleanXcode then
 	tell application "Xcode"
@@ -140,7 +143,10 @@ Continue?"
 end repeat
 
 # Reopen Xcode if necessary
-if cleanXcode then
+display dialog ("reopenOption = " & reopenOption & "
+reopenXcodeOption = " & reopenXcodeOption)
+
+if cleanXcode and reopenOption is equal to reopenXcodeOption then
 	tell application "Finder"
 		open workspaceFile
 	end tell
