@@ -143,9 +143,6 @@ Continue?"
 end repeat
 
 # Reopen Xcode if necessary
-display dialog ("reopenOption = " & reopenOption & "
-reopenXcodeOption = " & reopenXcodeOption)
-
 if cleanXcode and reopenOption is equal to reopenXcodeOption then
 	tell application "Finder"
 		open workspaceFile
