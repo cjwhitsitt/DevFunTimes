@@ -38,8 +38,11 @@ if startupMessage is equal to "" then
 Proceed without cleaning your Xcode workspace?"
 end if
 
-display dialog startupMessage buttons {"Cancel", "Don't Reopen Xcode", reopenXcodeOption} default button 3
-set reopenOption to button returned of result
+local reopenOption
+tell application "System Events"
+	display dialog startupMessage buttons {"Cancel", "Don't Reopen Xcode", reopenXcodeOption} default button 3
+	set reopenOption to button returned of result
+end tell
 
 if cleanXcode then
 	tell application "Xcode"
@@ -147,7 +150,7 @@ if cleanXcode and reopenOption is equal to reopenXcodeOption then
 	tell application "Finder"
 		open workspaceFile
 	end tell
-	else
-	display dialog "Done!"
+else
+	display dialog "Super Clean is finished!"
 end if
 return "Done"
