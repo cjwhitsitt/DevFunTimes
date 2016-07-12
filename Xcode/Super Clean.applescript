@@ -1,3 +1,5 @@
+set logging to false
+
 set cleanXcode to false
 local currentWorkspace
 local workspaceFile
@@ -7,8 +9,8 @@ set reopenXcodeOption to "Reopen Xcode"
 ###############################
 ## Clean and close current workspace
 set startupMessage to ""
-if (application "Xcode" is running) then
-	tell application "Xcode"
+if (application "Xcode-beta" is running) then
+	tell application "Xcode-beta"
 		set currentWorkspace to active workspace document
 		if (currentWorkspace is not equal to missing value) then
 			set cleanXcode to true
@@ -45,9 +47,23 @@ tell application "System Events"
 end tell
 
 if cleanXcode then
-	tell application "Xcode"
+	tell application "Xcode-beta"
 		tell currentWorkspace
-			clean
+			-- Clean now immediately returns a dictionary
+			set schemeResult to clean
+			
+			-- include timeout in case it takes entirely too long
+			set timeoutSeconds to 240
+			repeat timeoutSeconds times
+				if completed of schemeResult is true then
+					exit repeat
+				end if
+				delay 1
+			end repeat
+			
+			if completed of schemeResult is false then
+				error "Clean timed out after " & timeoutSeconds & " seconds"
+			end if
 		end tell
 		
 		display dialog "Please check the top status view and click Continue when it says
@@ -59,7 +75,7 @@ end if
 
 ###############################
 ## Permanently delete Derived Data folder
-tell application "Xcode"
+tell application "Xcode-beta"
 	quit
 end tell
 
@@ -100,7 +116,10 @@ set inDevices to false
 
 repeat with nextLine in (text items of devices)
 	try
-		#log nextLine
+		if logging then
+			log "New line: " & nextLine
+		end if
+		
 		if not ((offset of "==" in nextLine) is 0) then # if starting a section
 			if ((offset of "== Devices ==" in nextLine) is 0) then # and the section is Devices
 				set inDevices to false
@@ -113,13 +132,40 @@ repeat with nextLine in (text items of devices)
 			error "Not in devices" number 987
 		end if
 		
-		set openPar to offset of "(" in nextLine
-		if openPar is 0 then error "No open parenthesis" number 987
+		-- find the device id in the line
+		set idLength to 37 -- if device id length changes, update this value
+		set searchString to nextLine -- update with next substring to search for parenthesis pairs
+		local openPar, closePar
+		repeat
+			set openPar to offset of "(" in searchString
+			if openPar is 0 then error "No open parenthesis" number 987
+			
+			set closePar to offset of ")" in searchString
+			if closePar is 0 then error "No close parenthesis" number 987
+			
+			if logging then
+				log "Searching: " & text closePar thru openPar of searchString
+			end if
+			
+			if (closePar - openPar) is idLength then
+				if logging then
+					log "Found id"
+				end if
+				exit repeat
+			end if
+			
+			if logging then
+				log "Didn't find id - moving down nextLine"
+			end if
+			
+			set currentLength to length of searchString
+			set searchString to text (closePar + 1) thru currentLength of searchString
+		end repeat
 		
-		set closePar to offset of ")" in nextLine
-		if closePar is 0 then error "No close parenthesis" number 987
-		
-		set substring to text (openPar + 1) thru (closePar - 1) of nextLine
+		set substring to text (openPar + 1) thru (closePar - 1) of searchString -- +1 and -1 to remove the outer parenthesis
+		if logging then
+			log substring
+		end if
 		
 		set command to "xcrun simctl erase " & substring
 		do shell script command
@@ -133,8 +179,8 @@ Continue?"
 			if button returned is "End Now" then error msg
 		else
 			#uncomment for debugging
-			set uuids to uuids & command & "
-			"
+			#set uuids to uuids & command & "
+			#"
 		end if
 	on error msg number n from f to t partial result p
 		if n is equal to 987 then
