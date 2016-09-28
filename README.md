@@ -33,3 +33,10 @@ This script should be added to a build phase anytime after the Copy Bundle Resou
 Put this script in a folder that's in your Unix PATH, then run `xcw-open` from the command line to open an Xcode workspace while your pwd is the project folder.  This is useful when you have to close the Xcode workspace, run something on the command line (maybe `pod install`), then reopen Xcode.
 
 Note: This only opens the .xcworkspace file in the current directory. You can easily edit this to check the ls output and open the .xcproject file it no .xcworkspace file exists.
+
+### [git/](https://github.com/cjwhitsitt/scripts/tree/master/git)
+#### [MergeToDevelopNoFF.sh](https://github.com/cjwhitsitt/scripts/blob/master/git/MergeToDevelopNoFF.sh)
+This script will merge the current branch into develop with the --no-ff flag. Sometimes, you don't want to add the --no-ff flag to every merge in a specific repo or branch. This script is a must for lazy developers, especially those that don't use the command line.
+
+If you're using SourceTree, it can be even harder or impossible to setup your preferences to do what you want by default. You can create a Custom Action to run this script. It doesn't require any parameters because it reads the name of the branch that's currently checked out internally.
+For more information on SourceTree Custom Actions, [click here](https://blog.sourcetreeapp.com/2012/02/08/custom-actions-more-power-to-you/).
