@@ -9,8 +9,8 @@ set reopenXcodeOption to "Reopen Xcode"
 ###############################
 ## Clean and close current workspace
 set startupMessage to ""
-if (application "Xcode-beta" is running) then
-	tell application "Xcode-beta"
+if (application "Xcode" is running) then
+	tell application "Xcode"
 		set currentWorkspace to active workspace document
 		if (currentWorkspace is not equal to missing value) then
 			set cleanXcode to true
@@ -47,7 +47,7 @@ tell application "System Events"
 end tell
 
 if cleanXcode then
-	tell application "Xcode-beta"
+	tell application "Xcode"
 		tell currentWorkspace
 			-- Clean now immediately returns a dictionary
 			set schemeResult to clean
@@ -65,17 +65,16 @@ if cleanXcode then
 				error "Clean timed out after " & timeoutSeconds & " seconds"
 			end if
 		end tell
-		
-		display dialog "Please check the top status view and click Continue when it says
-\"Clean {project name}: Succeeded\".
-
-This step is necessary because there's currently a bug with Xcode where it tells the system that cleaning has finished when it really hasn't." buttons {"Cancel", "Continue"} default button "Continue"
 	end tell
 end if
 
+tell application "System Events"
+	display dialog "Closing Xcode now"
+end tell
+
 ###############################
 ## Permanently delete Derived Data folder
-tell application "Xcode-beta"
+tell application "Xcode"
 	quit
 end tell
 
@@ -199,4 +198,5 @@ if cleanXcode and reopenOption is equal to reopenXcodeOption then
 else
 	display dialog "Super Clean is finished!"
 end if
+
 return "Done"
