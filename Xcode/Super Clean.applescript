@@ -68,10 +68,6 @@ if cleanXcode then
 	end tell
 end if
 
-tell application "System Events"
-	display dialog "Closing Xcode now"
-end tell
-
 ###############################
 ## Permanently delete Derived Data folder
 tell application "Xcode"
