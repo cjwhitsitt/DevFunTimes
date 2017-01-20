@@ -1,4 +1,4 @@
-set logging to false
+set logging to true
 
 set cleanXcode to false
 local currentWorkspace
@@ -179,6 +179,7 @@ Continue?"
 		end if
 	on error msg number n from f to t partial result p
 		if n is equal to 987 then
+		else if n is equal to 159 then
 		else if (offset of "The file doesn’t exist." in msg) is not equal to 0 then # This error should contain a smart quote as of Xcode 6.4
 		else
 			error msg number n from f to t partial result p
@@ -191,8 +192,8 @@ if cleanXcode and reopenOption is equal to reopenXcodeOption then
 	tell application "Finder"
 		open workspaceFile
 	end tell
-else
-	display dialog "Super Clean is finished!"
 end if
+
+display dialog "Super Clean is finished!"
 
 return "Done"
