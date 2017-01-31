@@ -13,7 +13,7 @@ This AppleScript will
 
 \* These require that the script be ran with an Xcode workspace document open. The Xcode window does not have to be the top-most window though, just open. If a workspace document is not open when this is ran, these steps will be skipped.
 
-\+ There is currently a bug in Xcode where it says it's done cleaning when it's really not. Be sure to pay attention to the second dialog window that displays. You'll need to click Continue when Xcode is *really* done cleaning, otherwise, the script won't close Xcode correctly.
+\+ Before Xcode 8, there is was a bug where it says it's done cleaning when it's really not. Be sure to pay attention to the second dialog window that displays. You'll need to click Continue when Xcode is *really* done cleaning, otherwise, the script won't close Xcode correctly. This isn't an issue if you're running Xcode 8 and pull tag:Xcode8.
 
 I have put this in my `~/Library/Scripts/Applications/Xcode` folder and [enabled the AppleScript menu](http://thepoch.com/2012/enable-the-script-menu-in-mac-os-xs-menu-bar.html). That allows for quick access to the script when I need it.
 
