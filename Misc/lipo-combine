@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+### 
+# This script can be used to combine multiple framework binaries into one, often useful when different architectures are built in different .framework files
+#
+# $1 Name of the framework binary
+# $2 Path to a .framework bundle
+# $3 Path to a .framework bundle
+# $4 Output path
+###
+
+usage="$(basename "$0") [-h] <binary_name> <framework_path> <framework_path> <output_path>
+
+Program to combine architectures of two frameworks together
+If the binaries given in the framework paths have common architectures, an error will be produced."
+
+showHelp=false
+
+if [ "$1" == "-h" ]; then
+	showHelp=true
+elif [ -z "$1" ]; then
+	showHelp=true
+fi
+
+if $showHelp; then
+	echo "$usage"
+	exit 0
+fi
+
+cp -R "$2" "$4"
+lipo -create -output "$4/$1" "$2/$1" "$3/$1"
