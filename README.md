@@ -15,7 +15,7 @@ This AppleScript will
 
 \+ Before Xcode 8, there is was a bug where it says it's done cleaning when it's really not. Be sure to pay attention to the second dialog window that displays. You'll need to click Continue when Xcode is *really* done cleaning, otherwise, the script won't close Xcode correctly. This isn't an issue if you're running Xcode 8 and pull tag:Xcode8.
 
-I have put this in my `~/Library/Scripts/Applications/Xcode` folder and [enabled the AppleScript menu](http://thepoch.com/2012/enable-the-script-menu-in-mac-os-xs-menu-bar.html). That allows for quick access to the script when I need it.
+I have put this in my `~/Library/Scripts/Applications/Xcode` folder and [enabled the AppleScript menu](https://alvinalexander.com/mac-os-x/how-to-show-applescript-menu-item-mac-osx-menu-bar). That allows for quick access to the script when I need it.
 
 #### [Auto-Increment Build Number](https://github.com/cjwhitsitt/scripts/blob/master/Xcode/buildNumberFromGitCommit.sh)
 This script can be run during the build phase of an Xcode project to automatically generate a build number. The number will be equal to the number of git commits in the current branch.
